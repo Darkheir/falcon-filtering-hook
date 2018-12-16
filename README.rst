@@ -7,6 +7,8 @@ falcon-filtering-hook
     :target: https://travis-ci.org/Darkheir/falcon-filtering-hook
 .. image:: https://codecov.io/gh/Darkheir/falcon-filtering-hook/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/Darkheir/falcon-filtering-hook
+.. image:: https://api.codacy.com/project/badge/Grade/151e8f92301d431eb6144cf7915ef897
+  :target: https://www.codacy.com/app/Darkheir/falcon-filtering-hook?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Darkheir/falcon-filtering-hook&amp;utm_campaign=Badge_Grade
 
 
 A small falcon hook to parse filtering elements from the request.
