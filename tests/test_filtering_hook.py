@@ -34,3 +34,12 @@ class TestFilteringHook(TestCase):
         hook(self._request, self._response, self._resource, self._params)
 
         self.assertDictEqual(self._request.context["filters"], dict(foo='foo', bar='bar'))
+
+    def test_request_with_non_filtering_keys(self):
+        self._request.params["filter[foo]"] = 'foo'
+        self._request.params["ignore[bar]"] = 'bar'
+        self._request.params["foo"] = 'foo'
+        hook = FilteringHook()
+        hook(self._request, self._response, self._resource, self._params)
+
+        self.assertDictEqual(self._request.context["filters"], dict(foo='foo'))
