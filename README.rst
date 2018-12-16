@@ -1,6 +1,14 @@
 falcon-filtering-hook
 ======================
 
+.. image:: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+    :target: LICENSE
+.. image:: https://travis-ci.org/Darkheir/falcon-filtering-hook.svg?branch=master
+    :target: https://travis-ci.org/Darkheir/falcon-filtering-hook
+.. image:: https://codecov.io/gh/Darkheir/falcon-filtering-hook/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/Darkheir/falcon-filtering-hook
+
+
 A small falcon hook to parse filtering elements from the request.
 
 Usage
