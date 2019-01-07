@@ -11,16 +11,13 @@ class FilteringHook(object):
     under the "filters" key.
     """
 
-    def __init__(
-        self,
-        filtering_key: str = "filter",
-    ) -> None:
+    def __init__(self, filtering_key: str = "filter") -> None:
         """
         :param filtering_key: Base name for the filter query parameters
         """
         self._logger = logging.getLogger(__name__)
         self._filter_key = filtering_key
-        self._regex = re.compile(r'{}\[(.*)\]'.format(filtering_key))
+        self._regex = re.compile(r"{}\[(.*)\]".format(filtering_key))
 
     def __call__(
         self, request: Request, response: Response, resource: object, params: dict
@@ -44,4 +41,4 @@ class FilteringHook(object):
             match = self._regex.match(key)
             if not match:
                 continue
-            request.context['filters'][match.group(1)] = value
+            request.context["filters"][match.group(1)] = value
