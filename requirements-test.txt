@@ -1,6 +1,6 @@
 -r requirements.txt
 
-pytest
+pytest==4.1.0
 pytest-cov
 codecov
 coverage
