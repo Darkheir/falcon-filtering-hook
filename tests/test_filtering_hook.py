@@ -1,45 +1,35 @@
-from unittest import TestCase
-from unittest.mock import Mock
-
 from falcon_filtering.filtering_hook import FilteringHook
 
 
-class TestFilteringHook(TestCase):
-    def setUp(self):
-        self._request = Mock()
-        self._request.context = dict()
-        self._request.params = dict()
+def test_empty_request(request_obj, mocker):
+    hook = FilteringHook()
+    hook(request_obj, mocker.Mock(), mocker.Mock(), dict())
 
-        self._response = Mock()
-        self._resource = Mock()
-        self._params = dict()
+    assert isinstance(request_obj.context.get("filters"), dict)
 
-    def test_empty_request(self):
-        hook = FilteringHook()
-        hook(self._request, self._response, self._resource, self._params)
 
-        self.assertIsInstance(self._request.context.get("filters"), dict)
+def test_request_with_filter(request_obj, mocker):
+    request_obj.params["filter[foo]"] = 'bar'
+    hook = FilteringHook()
+    hook(request_obj, mocker.Mock(), mocker.Mock(), dict())
 
-    def test_request_with_filter(self):
-        self._request.params["filter[foo]"] = 'bar'
-        hook = FilteringHook()
-        hook(self._request, self._response, self._resource, self._params)
+    assert request_obj.context["filters"]["foo"] == 'bar'
 
-        self.assertEqual(self._request.context["filters"]["foo"], 'bar')
 
-    def test_request_with_multiple_filter(self):
-        self._request.params["filter[foo]"] = 'foo'
-        self._request.params["filter[bar]"] = 'bar'
-        hook = FilteringHook()
-        hook(self._request, self._response, self._resource, self._params)
+def test_request_with_multiple_filter(request_obj, mocker):
+    request_obj.params["filter[foo]"] = 'foo'
+    request_obj.params["filter[bar]"] = 'bar'
+    hook = FilteringHook()
+    hook(request_obj, mocker.Mock(), mocker.Mock(), dict())
 
-        self.assertDictEqual(self._request.context["filters"], dict(foo='foo', bar='bar'))
+    assert request_obj.context["filters"] == dict(foo='foo', bar='bar')
 
-    def test_request_with_non_filtering_keys(self):
-        self._request.params["filter[foo]"] = 'foo'
-        self._request.params["ignore[bar]"] = 'bar'
-        self._request.params["foo"] = 'foo'
-        hook = FilteringHook()
-        hook(self._request, self._response, self._resource, self._params)
 
-        self.assertDictEqual(self._request.context["filters"], dict(foo='foo'))
+def test_request_with_non_filtering_keys(request_obj, mocker):
+    request_obj.params["filter[foo]"] = 'foo'
+    request_obj.params["ignore[bar]"] = 'bar'
+    request_obj.params["foo"] = 'foo'
+    hook = FilteringHook()
+    hook(request_obj, mocker.Mock(), mocker.Mock(), dict())
+
+    assert request_obj.context["filters"] == dict(foo='foo')
