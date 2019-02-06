@@ -15,7 +15,7 @@ setup(
     author="Raphael Cohen",
     author_email="raphael.cohen.utt@gmail.com",
     url="https://github.com/darkheir/falcon-filtering-hook",
-    version="0.0.1",
+    version="0.2.0",
     classifiers=classifiers,
     description="Falcon filtering helper",
     long_description=open("README.rst").read(),

@@ -23,9 +23,12 @@ The easiest way to use this hook is the following:
 
 .. code:: python
 
-    @falcon.before(FilteringHook())
-    def on_get(self, req, resp, user):
-        # Here req['context']['filters'] is set
+    class Resource:
+        filtering_fields = ("foo", "bar")  # List of fields allowed for filtering
+
+        @falcon.before(FilteringHook())
+        def on_get(self, req, resp, user):
+            # Here req['context']['filters'] is set
 
 The Hook will look in the query parameters for parameters looking like :code:`filter[key]=value`.
 
@@ -35,6 +38,16 @@ i.e. :code:`key` in the example above.
 
 Configuration options
 ---------------------
+
+Allowing fields to be filtered
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For security reasons, the fields allowed for filtering must be specified in the :code:`filtering_fields` attribute of the resource.
+
+All the fields not defined in it will be discarded by the hook.
+
+
+Hook configuration
+~~~~~~~~~~~~~~~~~~
 
 One parameter can be passed to the hook:
 
