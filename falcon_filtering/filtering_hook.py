@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import Any
 
 from falcon import Request, Response
 
@@ -19,9 +20,7 @@ class FilteringHook(object):
         self._filter_key = filtering_key
         self._regex = re.compile(r"{}\[(.*)\]".format(filtering_key))
 
-    def __call__(
-        self, request: Request, response: Response, resource: object, params: dict
-    ) -> None:
+    def __call__(self, request: Request, response: Response, resource: Any, params: dict) -> None:
         """Actual hook operation that extract the filtering values from the request URL
 
         :param request: Falcon Request
@@ -30,9 +29,12 @@ class FilteringHook(object):
         :param params: dict of URI Template field names
         """
         request.context.setdefault("filters", dict())
-        self._set_filters(request)
+        if not hasattr(resource, "filtering_fields") or not resource.filtering_fields:
+            self._logger.debug("filtering_fields is not defined in resource, skipping")
+            return
+        self._set_filters(request, resource)
 
-    def _set_filters(self, request: Request) -> None:
+    def _set_filters(self, request: Request, resource: Any) -> None:
         """Extract the filters from the request and set it in the context dict.
 
         :param request: The Falcon request
@@ -41,4 +43,8 @@ class FilteringHook(object):
             match = self._regex.match(key)
             if not match:
                 continue
-            request.context["filters"][match.group(1)] = value
+            field_name = match.group(1)
+            if field_name not in resource.filtering_fields:
+                # Field not allowed, ignoring
+                continue
+            request.context["filters"][field_name] = value
