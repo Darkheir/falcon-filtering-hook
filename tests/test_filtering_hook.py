@@ -3,6 +3,7 @@ from falcon_filtering.filtering_hook import FilteringHook
 
 def test_empty_request(request_obj, mocker):
     hook = FilteringHook()
+
     class Ressource:
         filtering_fields = ('foo', 'bar')
     hook(request_obj, mocker.Mock(), Ressource(), dict())
@@ -13,6 +14,7 @@ def test_empty_request(request_obj, mocker):
 def test_request_with_filter(request_obj, mocker):
     request_obj.params["filter[foo]"] = "bar"
     hook = FilteringHook()
+
     class Ressource:
         filtering_fields = ('foo',)
     hook(request_obj, mocker.Mock(), Ressource(), dict())
@@ -24,6 +26,7 @@ def test_request_with_multiple_filter(request_obj, mocker):
     request_obj.params["filter[foo]"] = "foo"
     request_obj.params["filter[bar]"] = "bar"
     hook = FilteringHook()
+
     class Ressource:
         filtering_fields = ('foo', 'bar')
     hook(request_obj, mocker.Mock(), Ressource(), dict())
@@ -36,6 +39,7 @@ def test_request_with_non_filtering_keys(request_obj, mocker):
     request_obj.params["ignore[bar]"] = "bar"
     request_obj.params["foo"] = "foo"
     hook = FilteringHook()
+
     class Ressource:
         filtering_fields = ('foo', 'bar')
     hook(request_obj, mocker.Mock(), Ressource(), dict())
@@ -46,6 +50,7 @@ def test_request_with_non_filtering_keys(request_obj, mocker):
 def test_request_with_filter_not_allowed(request_obj, mocker):
     request_obj.params["filter[bar]"] = 'bar'
     hook = FilteringHook()
+
     class Ressource:
         filtering_fields = ('foo',)
     hook(request_obj, mocker.Mock(), Ressource(), dict())
@@ -56,8 +61,9 @@ def test_request_with_filter_not_allowed(request_obj, mocker):
 def test_request_without_filtering_fields(request_obj, mocker):
     request_obj.params["filter[foo]"] = 'bar'
     hook = FilteringHook()
+
     class Ressource:
         pass
     hook(request_obj, mocker.Mock(), Ressource(), dict())
 
-    assert request_obj.context["filters"] == {}
+    assert request_obj.context["filters"] == dict(foo="foo")
